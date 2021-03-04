@@ -23,12 +23,6 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>net.dathoang.cqrs.commandbus</groupId>
-		    <artifactId>commandbus-core</artifactId>
-		    <version>0.3.0</version>
-		</dependency>
-
-		<dependency>
 		  <groupId>net.dathoang.cqrs.commandbus</groupId>
 		  <artifactId>commandbus-spec</artifactId>
 	      <version>0.3.0</version>
@@ -38,6 +32,18 @@
 		  <groupId>net.dathoang.cqrs.commandbus</groupId>
 		  <artifactId>commandbus-spring</artifactId>
 	      <version>0.3.0</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>net.dathoang.cqrs.commandbus</groupId>
+		  <artifactId>commandbus-basic-middleware</artifactId>
+	      <version>0.3.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>net.dathoang.cqrs.commandbus</groupId>
+		    <artifactId>commandbus-core</artifactId>
+		    <version>0.3.0</version>
 		</dependency>
 
 		<dependency>

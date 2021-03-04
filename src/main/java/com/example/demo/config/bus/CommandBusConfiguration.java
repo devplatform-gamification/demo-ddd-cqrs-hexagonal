@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.config.bus;
 
 import org.springframework.stereotype.Component;
 

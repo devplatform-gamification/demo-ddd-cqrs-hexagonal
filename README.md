@@ -29,7 +29,7 @@ Adicione as dependências:
 </dependency>
 ```
 
-## Auto-scan CommandBus
+## Utilizando o CommandBus
 
 Utilizamos nesse projeto o auto-scan para configurar nosso CommandBus com Commands e CommandHandlers.
 
@@ -67,7 +67,7 @@ Antes de continuar, deve-se criar uma configuração que será lida pelo auto-sc
 ```
 
 Classe de exemplo utilizada para definir essa configuração:
-Exemplo: [CommandBusConfiguration.java](src/main/java/com/example/demo/CommandBusConfiguration.java)
+Exemplo: [CommandBusConfiguration.java](src/main/java/com/example/demo/config/bus/CommandBusConfiguration.java)
 
 ## Inicialização do CommandBus no springboot
 
@@ -77,7 +77,7 @@ Utilizamos aqui da seguinte forma:
 
 ```
 	@Autowired
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
 	CommandBusSpringConfiguration commandBusConfiguration = 
 			new CommandBusSpringConfiguration(applicationContext);
@@ -101,3 +101,32 @@ commandBusConfiguration.getCommandBus().handle(command);
 ```
 
 Exemplo: [TesteController.java](src/main/java/com/example/demo/infrastructure/adapters/cli/TesteController.java)
+
+
+## Utilizando Middlewares
+
+Middlewares são implementações estilo decorator que podem ser chamadas em um pipeline de execução, permitindo que se crie ações antes e depois da execução dos commands.
+Entre os exemplos mais mostrados, relacionados aos middlewares é possível identificar ações de log, monitor de tempo de execução dos commands e configuração de execução transacional para os commands.
+Mas também pode ser utilizado para a persistência dos DTOs utilizados no command, verificação de permissões, migração de dados e outros.  
+
+### Criando middlewares
+
+O primeiro passo é a criação de uma classe que implemente a interface Middleware. Sendo que o seu middleware deverá implementar a função
+handle(). No corpo deste método pode haver um tratamento de pré-execução do command, uma chamada ao command no formato:
+
+```
+R result = next.call(message);
+```
+
+E pode haver também um tratamento de pós-execução do command.
+
+Como exemplo, criamos a classe [TesteMiddleware.java](src/main/java/com/example/demo/core/services/middlewares/TesteMiddleware.java)
+
+### Utilizando os middlewares personalizados
+
+A biblioteca já criou uma configuração padrão para os Middlewares que é a DefaultMiddlewareConfig.java que não está disponível para alteração.
+Para criar a própria configuração de middlewares deve-se implementar a interface MiddlewareConfig, adicionando na ordem de execução do pipeline de Middlewares as operações pretendidas.
+
+A configuração personalizada dos middlewares deve ser uma classe que implemente a interaface MiddlewareConfig e anotada com @Configuration.
+
+Como exemplo de configuração criamos a classe [CustomMiddlewareConfig.java](src/main/java/com/example/demo/config/bus/CustomMiddlewareConfig.java)
