@@ -130,3 +130,20 @@ Para criar a própria configuração de middlewares deve-se implementar a interf
 A configuração personalizada dos middlewares deve ser uma classe que implemente a interaface MiddlewareConfig e anotada com @Configuration.
 
 Como exemplo de configuração criamos a classe [CustomMiddlewareConfig.java](src/main/java/com/example/demo/config/bus/CustomMiddlewareConfig.java)
+
+### Utilizando middleware para tornar a execução dos commands assíncrona
+
+Criamos uma configuração personalizada para permitir que o commandBus execute os commands de forma assíncrona, baseamos a implementação na documentação do Laravel CommandBus.
+
+Para essa tarefa foram utilizados os seguintes conceitos:
+	- queue - responsável por enfileirar (enqueue) e desenfileirar (dequeue) as mensagens - o formato dessas mensagens é sempre String.
+	- commandQueue - responsável por criar um novo comando (ReceiveCommand) que encapsulará o command original - esta classe também deverá serializar o novo comando e seu conteúdo antes de enviá-lo para a fila.
+	- ReceiveCommand - comando responsável por encapsular o comando original
+
+Criamos as respectivas implementações CustomQueue, CustomCommandQueue, implementando a fila assíncrona em memória.
+Fizemos ainda a implementação de um middleware [AsyncBusMiddleware.java](src/main/java/com/example/demo/core/services/middlewares/AsyncBusMiddleware.java) utilizado para enviar commandos síncronos para a fila assíncrona e que ao receber um commando da fila ReceiveCommand, recupera o command original e faz a sua execução.
+
+Colocamos a recuperação dos dados da fila de forma sequencial no nosso demo, mas poderia ser uma thread separada observando a fila e executando os commands que lá estiverem em paralelo.
+
+Poderia ainda ser implementada uma fila para utilizar o Postgres ou o RabbitMQ o que permitira a utilização do CommandBus de forma distribuída, dividindo a carga das execuções entre outras instâncias da aplicação.
+ 
